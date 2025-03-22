@@ -30,7 +30,6 @@ export function LoginForm() {
 
   console.log("Supabase client initialized:", supabase);
 
-  // ✅ Prevent memory leaks when checking session
   useEffect(() => {
     let isMounted = true;
 
@@ -79,7 +78,6 @@ export function LoginForm() {
         return;
       }
 
-      // ✅ Ensure session is set before redirecting
       toast.success("Login successful! Redirecting...");
       setTimeout(() => {
         router.push("/admin");
@@ -112,7 +110,7 @@ export function LoginForm() {
       <Card className="max-w-sm mx-auto">
         <CardHeader>
           <CardTitle>Welcome Admin!</CardTitle>
-          <CardDescription>Let&apos;s to manage everything?</CardDescription>
+          <CardDescription>Let&apos;s manage everything?</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
