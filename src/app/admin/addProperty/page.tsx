@@ -8,9 +8,13 @@ import Image from "next/image"; // Import next/image for optimization
 const AddPropertyForm = () => {
   const [formData, setFormData] = useState({
     propertyTitle: "",
+    propertyType: "",
+    location: "",
+    lotArea: "",
+    roomNumber: "",
+    bathroomNumber: "",
     description: "",
     price: "",
-    propertyType: "",
     img: [] as File[],
   });
 
@@ -42,8 +46,16 @@ const AddPropertyForm = () => {
     if (loading) return;
     setLoading(true);
 
+    const filteredData = { ...formData };
+    if (formData.propertyType === "lot") {
+      filteredData.roomNumber = "N/A";
+      filteredData.bathroomNumber = "N/A";
+    }
+
     if (
-      Object.values(formData).some((value) => value === "" || value === null) ||
+      Object.values(filteredData).some(
+        (value) => value === "" || value === null,
+      ) ||
       formData.img.length === 0
     ) {
       toast.error("All fields, including at least one image, are required.", {
@@ -55,7 +67,7 @@ const AddPropertyForm = () => {
     }
 
     toast.success(
-      `${formData.propertyTitle} is successfully added to the list!`,
+      `${filteredData.propertyTitle} is successfully added to the list!`,
       {
         position: "top-center",
         autoClose: 3000,
@@ -69,6 +81,10 @@ const AddPropertyForm = () => {
     setFormData({
       propertyTitle: "",
       description: "",
+      location: "",
+      lotArea: "",
+      roomNumber: "",
+      bathroomNumber: "",
       price: "",
       propertyType: "",
       img: [],
@@ -78,7 +94,7 @@ const AddPropertyForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100 p-6">
+    <div className="flex justify-center items-center h-screen bg-gray-100 p-6  flex gap-4">
       <ToastContainer position="top-center" autoClose={3000} />
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg mt-24">
         <h1 className="text-2xl font-bold text-center mb-4">
@@ -93,6 +109,58 @@ const AddPropertyForm = () => {
             value={formData.propertyTitle}
             onChange={handleChange}
           />
+
+          <select
+            className="w-full p-2 border rounded"
+            name="propertyType"
+            value={formData.propertyType}
+            onChange={handleChange}
+          >
+            <option value="">Select a Property Type</option>
+            <option value="house and lot">House and Lot</option>
+            <option value="condo">Condominium</option>
+            <option value="lot">Lot</option>
+          </select>
+
+          <input
+            type="text"
+            placeholder="Location"
+            className="w-full p-2 border rounded"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+          />
+
+          <div className="flex gap-4">
+            <input
+              type="text"
+              placeholder="Lot Area"
+              className="w-1/3 p-2 border rounded"
+              name="lotArea"
+              value={formData.lotArea}
+              onChange={handleChange}
+            />
+
+            <input
+              type="text"
+              placeholder="Room No."
+              className="w-1/3 p-2 border rounded"
+              name="roomNumber"
+              value={formData.roomNumber}
+              onChange={handleChange}
+              disabled={formData.propertyType === "lot"}
+            />
+
+            <input
+              type="text"
+              placeholder="Bathroom No."
+              className="w-1/3 p-2 border rounded"
+              name="bathroomNumber"
+              value={formData.bathroomNumber}
+              onChange={handleChange}
+              disabled={formData.propertyType === "lot"}
+            />
+          </div>
 
           <input
             type="text"
@@ -111,18 +179,6 @@ const AddPropertyForm = () => {
             value={formData.price}
             onChange={handleChange}
           />
-
-          <select
-            className="w-full p-2 border rounded"
-            name="propertyType"
-            value={formData.propertyType}
-            onChange={handleChange}
-          >
-            <option value="">Select a Property Type</option>
-            <option value="house and lot">House and Lot</option>
-            <option value="condo">Condominium</option>
-            <option value="lot">Lot</option>
-          </select>
 
           <input
             type="file"
